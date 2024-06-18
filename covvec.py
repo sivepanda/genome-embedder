@@ -22,25 +22,26 @@ def create_coverage_vectors( feature='', feature_file='', genome="hg38", base='t
     if len( feature_file ) == 0:
         feature_file = feature + '.bed'
 
-    genome_windows = pybedtools.BedTool().window_maker(g=os.path.join(os.getcwd(), base , genome + '.fa.fai') , w=window_size)
+    windows = pybedtools.BedTool().window_maker(g=os.path.join(os.getcwd(), base, 'ref', genome + '.fa.fai') , w=window_size)
     feature = pybedtools.example_bedtool(os.path.join(os.getcwd(), base , feature_file))
+    
 
-    overlap = genome_windows.intersect(feature, wao=True)
+
+    overlap = windows.intersect(feature, c=True)
+    print(len(windows))
 
     coverage_vec = []
 
     for f in overlap:
+
         try:
-            n = int(f[-1])
+            # for now, we'll omit the final sequences of each chromosome to allow for vectors to retain the same dimensionality
+            # later, strategy could either be appending zeros to fill out the remainder of the window, or it could be adjusting 
+            # window size to work with everything else, assuming it makes sense computationally + no prime lengths
+            if f <= 1000:
+                n = f
+                coverage_vec.append(n / window_size)
         except:
             n = 0
-        coverage_vec.append(n / window_size)
-
+            coverage_vec.append(n / window_size)
     return np.array( coverage_vec )
-
-    # sum(f.length for f in (feature.intersect(reference, u=True))) / (sum(f.length for f in feature))
-    # return np.array(overlap_percentage.to_dataframe()['name'])
-
-
-# overlap_percentage = overlap.apply(calculate_percentage)
-
