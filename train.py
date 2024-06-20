@@ -2,10 +2,11 @@ import os
 import numpy as np
 from covvec import create_coverage_vectors 
 from sklearn.model_selection import train_test_split
-
+import matplotlib.pyplot as plt
 import tensorflow as tf
 from tensorflow.keras.models import Model
 from tensorflow.keras.layers import Input, Dense
+
 def each_file():
     # Specify the directory path
     directory_path = os.path.join(os.getcwd(), "tracks")
@@ -49,5 +50,17 @@ autoencoder.fit(x_train, x_train,
                 validation_data=(x_test, x_test))
 
 
-print(f'x_train shape: {x_train.shape}')
-print(f'x_test shape: {x_test.shape}')
+
+# Calculate reconstruction error for test set
+x_test_pred = autoencoder.predict(x_test)
+reconstruction_error = np.mean(np.square(x_test - x_test_pred), axis=1)
+
+for r in reconstruction_error:
+    print(r)
+
+# Plot histogram of reconstruction errors
+plt.hist(reconstruction_error, bins=4)
+plt.xlabel("Reconstruction error")
+plt.ylabel("Number of samples")
+plt.title("Reconstruction error histogram")
+plt.show()
