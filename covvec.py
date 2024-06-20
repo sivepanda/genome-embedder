@@ -38,7 +38,7 @@ def create_coverage_vectors( feature='', feature_file='', genome="hg38", base='t
             # for now, we'll omit the final sequences of each chromosome to allow for vectors to retain the same dimensionality
             # later, strategy could either be appending zeros to fill out the remainder of the window, or it could be adjusting 
             # window size to work with everything else, assuming it makes sense computationally + no prime lengths
-            if f <= 1000:
+            if f <= window_size:
                 n = f
                 coverage_vec.append(n / window_size)
         except:
