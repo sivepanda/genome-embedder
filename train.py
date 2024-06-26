@@ -1,6 +1,6 @@
 import os
 import numpy as np
-from covvec import create_coverage_vectors 
+from covvec import get_coverage_vectors
 from sklearn.model_selection import train_test_split
 import matplotlib.pyplot as plt
 import tensorflow as tf
@@ -8,7 +8,8 @@ from tensorflow.keras.models import Model
 from tensorflow.keras.layers import Input, Dense
 
 
-data = each_file()
+data = get_coverage_vectors(new_coverage_vectors=True)
+
 x_train, x_test = train_test_split(data, test_size=0.2, random_state=42)
 
 
