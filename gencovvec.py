@@ -4,6 +4,8 @@ import numpy as np
 import concurrent.futures
 import threading
 
+np.set_printoptions(threshold=np.inf)
+
 def get_coverage_vectors(track_path='tracks', coverage_vector_path='covvecs', new_coverage_vectors=False):
     all_data = []
 
@@ -14,7 +16,7 @@ def get_coverage_vectors(track_path='tracks', coverage_vector_path='covvecs', ne
         if os.path.isfile(file_path):
             temp = np.load(file_path)
             all_data.append(temp)
-        print(len(all_data))
+
     return np.array( all_data )
 
 # Creates a numpy array for each BED file located in the track_path (./tracks by default). Saves the numpy arrays to files in the coverage_vector_path (./covvecs by default)
@@ -30,7 +32,6 @@ def coverage_vectors_from_bed(track_path = 'tracks', coverage_vector_path='covve
     
     with concurrent.futures.ThreadPoolExecutor(max_workers=max_workers) as executor:
         p = os.path.join(os.getcwd(), coverage_vector_path)
-        print('yo')
         futures = [executor.submit( create_coverage_vector, feature_file=filename, save=True, path=os.path.join(p, filename.split(".")[0] )) for filename in os.listdir(track_path)]
         [future.result() for future in concurrent.futures.as_completed(futures)]
     return True
@@ -57,22 +58,22 @@ def create_coverage_vector( feature='', feature_file='', genome="hg38", base='tr
         print("Skipped", feature_file ,"because it is not a BED file")
         return False
     if os.path.isfile(path + '.npy'):
-        print("already done.")
+        print(feature_file, "has already been processed")
         return True
     
     if len( feature_file ) == 0:
         feature_file = feature + '.bed'
     windows = pybedtools.BedTool().window_maker(g=os.path.join(os.getcwd(), base, 'ref', genome + '.fa.fai') , w=window_size)
     feature = pybedtools.example_bedtool(os.path.join(os.getcwd(), base , feature_file))
-    overlap = windows.intersect(feature, c=True)
+    overlap = windows.intersect(feature, wao=True)
     coverage_vec = []
     # for now, we'll omit the final sequences of each chromosome to allow for vectors to retain the same dimensionality
     # later, strategy could either be appending zeros to fill out the remainder of the window, or it could be adjusting 
     # window size to work with everything else, assuming it makes sense computationally + no prime lengths
     for f in overlap:
         try:
-            if f <= window_size:
-                n = f
+            if int(f[-1]) <= window_size:
+                n = int(f[-1])
                 coverage_vec.append(n / window_size)
         except:
             n = 0
