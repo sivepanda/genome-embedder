@@ -65,19 +65,19 @@ def create_coverage_vector( feature='', feature_file='', genome="hg38", base='tr
         feature_file = feature + '.bed'
     windows = pybedtools.BedTool().window_maker(g=os.path.join(os.getcwd(), base, 'ref', genome + '.fa.fai') , w=window_size)
     feature = pybedtools.example_bedtool(os.path.join(os.getcwd(), base , feature_file))
-    overlap = windows.intersect(feature, wao=True)
+    overlap = windows.coverage(feature)
     coverage_vec = []
     # for now, we'll omit the final sequences of each chromosome to allow for vectors to retain the same dimensionality
     # later, strategy could either be appending zeros to fill out the remainder of the window, or it could be adjusting 
     # window size to work with everything else, assuming it makes sense computationally + no prime lengths
     for f in overlap:
         try:
-            if int(f[-1]) <= window_size:
-                n = int(f[-1])
-                coverage_vec.append(n / window_size)
+            n = float( f[-1] )
+            if n <= 1 and n >= 0:
+                coverage_vec.append(n)
         except:
             n = 0
-            coverage_vec.append(n / window_size)
+            coverage_vec.append(n)
     
     ret = np.array( coverage_vec )
 
