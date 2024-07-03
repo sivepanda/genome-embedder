@@ -2,21 +2,26 @@ from tensorflow.keras.models import load_model
 import numpy as np
 from sklearn.manifold import TSNE
 import matplotlib.pyplot as plt 
+from gencovvec import get_coverage_vectors
 from gencovvec import get_labelled_coverage_vectors
+from genemb import get_encoded_vals 
 
-dim = 4 # define the number of dimensions
+options = ['2-dimensional-graph', '3-dimensional-graph-matplot', '3-dimensional-graph-plotly']
+option = options[2]
 
-np.set_printoptions(threshold=np.inf)
-lbc = get_labelled_coverage_vectors()
-encoder = load_model('./encoder.keras')
-encoded_vals = {}
-for key, value in lbc.items():
-    print(key)
-    encoded_vals[ key ] = encoder.predict( np.array( [value] ) )
-    print( encoded_vals[ key ] )
+encoded_vals = get_encoded_vals()
+
+# np.set_printoptions(threshold=np.inf)
+# lbc = get_labelled_coverage_vectors()
+# encoder = load_model('./models/encoder.keras')
+# encoded_vals = {}
+# for key, value in lbc.items():
+#     print(key)
+#     encoded_vals[ key ] = encoder.predict( np.array( [value] ) )
+#     print( encoded_vals[ key ] )
 
 
-if dim == 2:
+if option == options[0]:
     e_v = []
     for key, value in encoded_vals.items():
         e_v.append( value[0] )
@@ -33,7 +38,7 @@ if dim == 2:
 
 
 
-if dim == 3:
+if option == options[1]:
     e_v = []
     for key, value in encoded_vals.items():
         e_v.append( value[0] )
@@ -51,7 +56,7 @@ if dim == 3:
 
     plt.show()
 
-if dim == 4:
+if option == options[2]:
     import pandas as pd
     import plotly.express as px
     e_v = []
