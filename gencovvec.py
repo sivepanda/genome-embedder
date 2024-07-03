@@ -6,6 +6,7 @@ import threading
 
 np.set_printoptions(threshold=np.inf)
 
+# Return a numpy array of arrays for every file in coverage_vector_path
 def get_coverage_vectors(track_path='tracks', coverage_vector_path='covvecs', new_coverage_vectors=False):
     all_data = []
 
@@ -18,6 +19,20 @@ def get_coverage_vectors(track_path='tracks', coverage_vector_path='covvecs', ne
             all_data.append(temp)
 
     return np.array( all_data )
+
+# Return a LABELLED numpy array of arrays for every file in coverage_vector_path
+def get_labelled_coverage_vectors( coverage_vector_path='covvecs' ):
+    all_data = {}
+
+    for filename in os.listdir( coverage_vector_path ):
+        file_path = os.path.join(coverage_vector_path , filename)
+        if os.path.isfile(file_path):
+            temp = np.load(file_path)
+            id_name = file_path.split("/")[1].split(".")[0]
+            all_data[ id_name ] = temp
+
+    return all_data
+
 
 # Creates a numpy array for each BED file located in the track_path (./tracks by default). Saves the numpy arrays to files in the coverage_vector_path (./covvecs by default)
 def coverage_vectors_from_bed(track_path = 'tracks', coverage_vector_path='covvecs'):
