@@ -6,6 +6,8 @@ from gencovvec import get_coverage_vectors
 from gencovvec import get_labelled_coverage_vectors
 from genemb import get_encoded_vals 
 
+get_coverage_vectors(new_coverage_vectors=True)
+
 options = ['2-dimensional-graph', '3-dimensional-graph-matplot', '3-dimensional-graph-plotly']
 option = options[2]
 
