@@ -3,6 +3,7 @@ import pybedtools
 import numpy as np
 import concurrent.futures
 import threading
+from scipy.sparse import csr_matrix
 
 np.set_printoptions(threshold=np.inf)
 
@@ -18,7 +19,7 @@ def get_coverage_vectors(track_path='tracks', coverage_vector_path='covvecs', ne
             temp = np.load(file_path)
             all_data.append(temp)
 
-    return np.array( all_data )
+    return  np.array( all_data ) 
 
 # Return a LABELLED numpy array of arrays for every file in coverage_vector_path
 def get_labelled_coverage_vectors( coverage_vector_path='covvecs' ):
@@ -82,10 +83,13 @@ def create_coverage_vector( feature='', feature_file='', genome="hg38", base='tr
     feature = pybedtools.example_bedtool(os.path.join(os.getcwd(), base , feature_file))
     overlap = windows.coverage(feature)
     coverage_vec = []
+    print(len(overlap))
     # for now, we'll omit the final sequences of each chromosome to allow for vectors to retain the same dimensionality
     # later, strategy could either be appending zeros to fill out the remainder of the window, or it could be adjusting 
     # window size to work with everything else, assuming it makes sense computationally + no prime lengths
     for f in overlap:
+        if float( f[-1] ) < 0:
+            print( f[-1] )
         try:
             n = float( f[-1] )
             if n <= 1 and n >= 0:
