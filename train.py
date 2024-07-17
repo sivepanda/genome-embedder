@@ -42,6 +42,9 @@ tf.keras.mixed_precision.set_global_policy(policy)
 print("Getting coverage vectors...")
 # Get coverage vectors
 data = get_coverage_vectors(new_coverage_vectors=create_new_coverage_vectors)
+
+print("Successfully pulled coverage vectors")
+
 data_f32 = data.astype(np.float16)
 
 print("Creating training and test datasets...")
