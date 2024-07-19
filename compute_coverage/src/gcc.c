@@ -1,15 +1,9 @@
-#include <stdio.h>
+#include "gcc.h"
 
-int square(int i) {
-	return i * i;
+int add(int a, int b) {
+    return a + b;
 }
 
-int listfn(float array[]) {
-    for (int i = 0; i < array.length; i++) {
-        printf(array[i]);
-    }
-
-}
 
 // for f in overlap:
         // print( f[-1] )
@@ -20,3 +14,6 @@ int listfn(float array[]) {
     //  except:
         // n = 0
         // coverage_vec.append(n)
+//
+//
+//
