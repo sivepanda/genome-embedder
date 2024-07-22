@@ -9,20 +9,11 @@ from genemb import get_encoded_vals
 get_coverage_vectors(new_coverage_vectors=True)
 
 options = ['2-dimensional-graph', '3-dimensional-graph-matplot', '3-dimensional-graph-plotly']
-option = options[2]
+option = options[2] # Select the index of the desired option
 
 encoded_vals = get_encoded_vals()
 
-# np.set_printoptions(threshold=np.inf)
-# lbc = get_labelled_coverage_vectors()
-# encoder = load_model('./models/encoder.keras')
-# encoded_vals = {}
-# for key, value in lbc.items():
-#     print(key)
-#     encoded_vals[ key ] = encoder.predict( np.array( [value] ) )
-#     print( encoded_vals[ key ] )
-
-
+# 2 Dimensional graph
 if option == options[0]:
     e_v = []
     for key, value in encoded_vals.items():
@@ -39,7 +30,7 @@ if option == options[0]:
     plt.show()
 
 
-
+# 3 Dimensional plot with Matplotlib
 if option == options[1]:
     e_v = []
     for key, value in encoded_vals.items():
@@ -58,6 +49,7 @@ if option == options[1]:
 
     plt.show()
 
+# 3 Dimensional plot with Plotly
 if option == options[2]:
     import pandas as pd
     import plotly.express as px

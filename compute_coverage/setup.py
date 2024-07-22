@@ -8,6 +8,6 @@ setup(
     name='GenerateCoverageVectors',
     version='0.1',
     description='Python Package with C extension for computing coverage vectors across a genome',
-    packages=find_packages(),
+    # packages=find_packages(),
     ext_modules=[module]
 )

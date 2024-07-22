@@ -4,3 +4,4 @@
 /models
 /covvecs
 /embeddings
+*.egg-info
