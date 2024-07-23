@@ -3,7 +3,7 @@
 #include <numpy/arrayobject.h>
 #include "gcc.h"
 
-static PyObject* coverage_vectors_from_str(PyObject *self, PyObject *args) {
+static PyObject* coverage_vectors_from_string(PyObject *self, PyObject *args) {
     const char* inputString;
 
     if (!PyArg_ParseTuple(args, "s", &inputString)) {
@@ -21,16 +21,18 @@ static PyObject* coverage_vectors_from_str(PyObject *self, PyObject *args) {
     npy_float16* data = malloc(lines * sizeof(npy_float16));
     if (data == NULL) return PyErr_NoMemory();
 
-    const char *line_start = input_string;
+    const char *line_start = inputString;
     const char *line_end;
     int i = 0;
 
     while (*line_start) {
         line_end = strchr(line_start, '\n') ? strchr(line_start, '\n') : line_start + strlen(line_start);
         const char *last_tab = strrchr(line_start, '\t');
+        printf("\n%s", line_start);
 
         if (last_tab && last_tab < line_end) {
             float value = atof(last_tab + 1);
+            printf("\n%f", value);
             data[i++] = value;  // Cast to float16 implicitly, may need explicit conversion depending on platform
         }
 
@@ -62,7 +64,7 @@ static PyObject* dda(PyObject *self, PyObject *args) {
 }
 
 static PyModuleDef ModuleMethods[] = {
-    {"dda", dda, METH_VARARGS, "Adds two integers"},
+    //{"dda", dda, METH_VARARGS, "Adds two integers"},
     {"coverage_vectors_from_string", coverage_vectors_from_string, METH_VARARGS, "Converts String generated from Bedtools to Numpy array"},
     {NULL, NULL, 0, NULL} //Sentinel?
 };

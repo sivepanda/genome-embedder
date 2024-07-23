@@ -1,7 +1,8 @@
 from setuptools import setup, Extension, find_packages
+import numpy
 
 # Define the extension module
-module = Extension('generate_coverage_vectors', sources=['src/gcc.c'])
+module = Extension('generate_coverage_vectors', sources=['src/gcc.c'], include_dirs=[numpy.get_include()])
 
 # Run the setup
 setup(
