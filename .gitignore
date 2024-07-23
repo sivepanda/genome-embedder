@@ -6,3 +6,4 @@
 /embeddings
 *.egg-info
 /compute_coverage/build
+snap.pickle

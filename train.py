@@ -7,7 +7,6 @@ import matplotlib.pyplot as plt
 import tensorflow as tf
 from tensorflow.keras.models import Model
 from tensorflow.keras.layers import Input, Dense
-
  
 
 # Options
@@ -93,7 +92,7 @@ with strategy.scope():
 
     input_data = Input(shape=(input_dim,))
 
-    encoded = Dense(encoding_dim, activation='relu')(input_data)
+    encoded = Dense(encoding_dim, dtype='float16', activation='relu')(input_data)
     # Set next column to have decrease dimensionality by half
     # encoding_dim = int( encoding_dim // 2 ) 
     # encoded = Dense(encoding_dim, activation='relu')(encoded)
@@ -103,7 +102,7 @@ with strategy.scope():
     # Set next colum to twice the previous dimensionality before returning to the initial dimensionality
     # decoding_dim = ( encoding_dim * 2 ) 
     # decoded = Dense(decoding_dim, activation='relu')(encoded)
-    decoded = Dense(input_dim, activation='sigmoid')(encoded)
+    decoded = Dense(input_dim, dtype='float16', activation='sigmoid')(encoded)
 
     autoencoder = Model(input_data, decoded)
     autoencoder.compile(optimizer='adam', loss='mse')
