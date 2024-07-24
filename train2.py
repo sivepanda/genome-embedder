@@ -10,9 +10,10 @@ from tensorflow.keras.layers import Input, Dense
 
 # data = get_coverage_vectors()
 data = get_coverage_vectors(new_coverage_vectors=False)
-data_f16 = data.astype(np.float16)
+data = data.astype(np.float32)
+# data_f16 = data.astype(np.float16)
 
-x_train, x_test = train_test_split(data_f16, test_size=0.2, random_state=50)
+x_train, x_test = train_test_split(data, test_size=0.2, random_state=50)
 
 
 # Define the size of the encoding
@@ -23,7 +24,7 @@ print(input_dim)
 
 input_data = Input(shape=(input_dim,))
 
-encoded = Dense(encoding_dim, dtype='float16', activation='relu')(input_data)
+encoded = Dense(encoding_dim, activation='relu')(input_data)
 encoding_dim = int( encoding_dim // 2 ) # Dimension of the latent space
 encoded = Dense(encoding_dim, activation='relu')(encoded)
 
@@ -38,7 +39,7 @@ autoencoder = Model(input_data, decoded)
 autoencoder.compile(optimizer='adam', loss='mse')
 
 autoencoder.fit(x_train, x_train,
-                epochs=12,
+                epochs=50,
                 batch_size=128,
                 shuffle=True,
                 validation_data=(x_test, x_test))

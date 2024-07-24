@@ -13,12 +13,16 @@ def get_coverage_vectors(track_path='tracks', coverage_vector_path='covvecs', ne
 
     if new_coverage_vectors == True:
         coverage_vectors_from_bed( track_path=track_path, coverage_vector_path=coverage_vector_path )
+    dirlen = (len(os.listdir(coverage_vector_path)))
+    i = 0
     for filename in os.listdir( coverage_vector_path ):
-        print("Opening", filename)
+        i += 1
+        print(f'Opening file {i} / {dirlen}: {filename}                                             ', flush=True, end='\r')
         file_path = os.path.join(coverage_vector_path , filename)
         if os.path.isfile(file_path):
             temp = np.load(file_path)
             all_data.append(temp)
+    print("\t")
     print("Constructing numpy array...")
     return  np.array( all_data ) 
 
