@@ -4,6 +4,9 @@
 /models
 /covvecs
 /embeddings
-*.egg-info
+/__pycache__
 /compute_coverage/build
 snap.pickle
+*.egg-info
+*.keras
+*.npy

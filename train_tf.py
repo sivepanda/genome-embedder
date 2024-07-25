@@ -1,4 +1,3 @@
-import os
 import numpy as np
 from gencovvec import get_coverage_vectors
 from sklearn.model_selection import train_test_split

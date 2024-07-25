@@ -1,22 +1,25 @@
-from tensorflow.keras.models import load_model
+# from tensorflow.keras.models import load_model
+import os
 import numpy as np
 from sklearn.manifold import TSNE
 import matplotlib.pyplot as plt 
+from torch_model import Autoencoder
 from gencovvec import get_coverage_vectors
 from gencovvec import get_labelled_coverage_vectors
-from genemb import get_encoded_vals 
+from genemb import get_encoded_vals_torch
 
 get_coverage_vectors(new_coverage_vectors=True)
 
 options = ['2-dimensional-graph', '3-dimensional-graph-matplot', '3-dimensional-graph-plotly']
-option = options[2] # Select the index of the desired option
+option = options[0] # Select the index of the desired option
 
-encoded_vals = get_encoded_vals()
+encoded_vals = get_encoded_vals_torch()
 
 # 2 Dimensional graph
 if option == options[0]:
     e_v = []
     for key, value in encoded_vals.items():
+        print(len(value))
         e_v.append( value[0] )
     e_v = np.array( e_v )
     labels = list( encoded_vals.keys() )
@@ -27,7 +30,7 @@ if option == options[0]:
     plt.scatter( embeddings_2d[:, 0], embeddings_2d[:, 1] )
     for i, label in enumerate( labels ):
         plt.annotate( label, ( embeddings_2d[i, 0], embeddings_2d[i, 1] ) )
-    plt.show()
+    plt.savefig(os.path.join(os.getcwd(), 'results', f'fig.png'))
 
 
 # 3 Dimensional plot with Matplotlib
