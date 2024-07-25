@@ -11,7 +11,7 @@ from genemb import get_encoded_vals_torch
 get_coverage_vectors(new_coverage_vectors=True)
 
 options = ['2-dimensional-graph', '3-dimensional-graph-matplot', '3-dimensional-graph-plotly']
-option = options[0] # Select the index of the desired option
+option = options[2] # Select the index of the desired option
 
 encoded_vals = get_encoded_vals_torch()
 

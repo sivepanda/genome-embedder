@@ -5,6 +5,7 @@
 /covvecs
 /embeddings
 /__pycache__
+/__pycache__/*
 /compute_coverage/build
 snap.pickle
 *.egg-info

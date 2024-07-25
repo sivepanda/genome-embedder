@@ -27,13 +27,14 @@ def get_encoded_vals_torch(model_file='./models/model.pth', verbose_output=False
     import torch
 
 
-    device = torch.device("cuda" if torch.cuda.is_available() else cpu)
+    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    map_location = torch.device("cpu")
 
     # Set print limit to infinity
     np.set_printoptions(threshold=np.inf)
     
     # Load PyTorch file
-    model = torch.load(model_file)
+    model = torch.load(model_file) if device == "cuda" else torch.load(model_file, map_location=map_location) 
     model.eval()
 
     lbc = get_labelled_coverage_vectors()
