@@ -61,6 +61,7 @@ if option == options[2]:
         e_v.append( value[0] )
     e_v = np.array( e_v )
     labels = list( encoded_vals.keys() )
+    print('here')
 
     tsne = TSNE(n_components = 3)
     embeddings_3d = tsne.fit_transform( e_v )
@@ -70,4 +71,4 @@ if option == options[2]:
     # Plot with Plotly
     fig = px.scatter_3d(df, x='x', y='y', z='z', text='label')
     fig.update_traces(marker=dict(size=5), selector=dict(mode='markers+text'))
-    fig.show()
+    fig.write_html(os.path.join(os.getcwd(), 'results', 'fig.html'))

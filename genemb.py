@@ -13,10 +13,10 @@ def get_encoded_vals_tf(model_file='./models/encoder.keras', verbose_output=Fals
     lbc = get_labelled_coverage_vectors()
     encoded_vals = {}
     for key, value in lbc.items():
-        print(key)
+        print('kyr', key)
         encoded_vals[ key ] = encoder.predict( np.array( [value] ) )
         if verbose_output:
-            print( encoded_vals[ key ] )
+            print('enck', encoded_vals[ key ] )
     return encoded_vals
 
 
@@ -28,7 +28,7 @@ def get_encoded_vals_torch(model_file='./models/model.pth', verbose_output=False
 
 
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-    map_location = torch.device("cpu")
+    map_location = torch.device("cuda")
 
     # Set print limit to infinity
     np.set_printoptions(threshold=np.inf)
@@ -40,11 +40,11 @@ def get_encoded_vals_torch(model_file='./models/model.pth', verbose_output=False
     lbc = get_labelled_coverage_vectors()
     encoded_vals = {}
     for key, value in lbc.items():
-        print(key)
+        print('key', key)
         data = np.array( [ value ] )
         data = data.astype(np.float32)
         data = torch.tensor(data, device=device).unsqueeze(1)# .to(dtype=torch.float16)
         encoded_vals[ key ] = [ model( data.float() ).detach().cpu().numpy().squeeze() ]
         if verbose_output:
-            print( encoded_vals[ key ] )
+            print('eck', encoded_vals[ key ] )
     return encoded_vals

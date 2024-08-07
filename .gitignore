@@ -11,3 +11,4 @@ snap.pickle
 *.egg-info
 *.keras
 *.npy
+*.pyc

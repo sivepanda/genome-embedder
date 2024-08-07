@@ -44,7 +44,7 @@ def get_labelled_coverage_vectors( coverage_vector_path='covvecs' ):
 def coverage_vectors_from_bed(track_path = 'tracks', coverage_vector_path='covvecs'):
     track_path=os.path.join(os.getcwd(), track_path)
     coverage_vector_path = os.path.join(os.getcwd(), coverage_vector_path)
-    print(track_path, coverage_vector_path)
+    print('trcv', track_path, coverage_vector_path)
     
     # Initialize multithreaded operation and read all files located in track_path
     max_workers = os.cpu_count() if os.cpu_count() < 2 else 2
@@ -88,7 +88,7 @@ def create_coverage_vector( feature='', feature_file='', genome="hg38", base='tr
     feature = pybedtools.example_bedtool(os.path.join(os.getcwd(), base , feature_file))
     overlap = windows.coverage(feature)
     coverage_vec = []
-    print(len(overlap))
+    print('overlaplen',len(overlap))
     # for now, we'll omit the final sequences of each chromosome to allow for vectors to retain the same dimensionality
     # later, strategy could either be appending zeros to fill out the remainder of the window, or it could be adjusting 
     # window size to work with everything else, assuming it makes sense computationally + no prime lengths

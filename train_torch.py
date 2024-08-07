@@ -47,36 +47,55 @@ class Autoencoder(nn.Module):
     def __init__(self, input_dim):
         super(Autoencoder, self).__init__()
         self.downsample = nn.Sequential(
-            nn.Conv1d(1, 16, kernel_size=100, stride=20, padding=0),
+            nn.Conv1d(1, 16, kernel_size=80, stride=15, padding=0),
             nn.ReLU(),
             nn.Flatten(),
-            nn.Linear( ( get_postconv_dimensionality(input_dim, 0, 100, 20) * 16), 250 ),
+            nn.Linear( ( get_postconv_dimensionality(input_dim, 0, 80, 15) * 16), 256),
             nn.ReLU()
         )
 
-        self.encoder = nn.Sequential(
-            nn.Linear(250, 120),
+        self.encoder_fromconv = nn.Sequential(
+            nn.Linear(256, 128),
             nn.ReLU()
         )
         
-        self.decoder = nn.Sequential(
-            nn.Linear(120, 250),
+        self.decoder_fromconv = nn.Sequential(
+            nn.Linear(128, 256),
             nn.ReLU(), 
         )
-        
+         
         self.upsample = nn.Sequential(
-            nn.Linear( 250, (16 * get_postconv_dimensionality(input_dim, 0, 100, 20) ) ),
+            nn.Linear( 256, (16 * get_postconv_dimensionality(input_dim, 0, 80, 15) ) ),
             nn.ReLU(),
-            nn.Unflatten(1, (16, get_postconv_dimensionality(input_dim, 0, 100, 20))),
-            nn.ConvTranspose1d(16, 1, kernel_size=100, stride=20, padding=0, output_padding=0),
+            nn.Unflatten(1, (16, get_postconv_dimensionality(input_dim, 0, 80, 15))),
+            nn.ConvTranspose1d(16, 1, kernel_size=80, stride=15, padding=0, output_padding=0),
             nn.Sigmoid()
         )
+        
+        # self.encoder = nn.Sequential(
+        #     nn.Linear(input_dim, 256),
+        #     nn.ReLU(),
+        #     nn.Linear(256, 128),
+        #     nn.ReLU()
+        # )
+        # 
+        # self.decoder = nn.Sequential(
+        #     nn.Linear(128, 256),
+        #     nn.ReLU(), 
+        #     nn.Linear(256, input_dim),
+        #     nn.Sigmoid(), 
+        # )
+        
     def forward(self, x):
+        # encoded = self.encoder(x)
+        # decoded = self.decoder(encoded)
+        # final = decoded
         downsampled = self.downsample(x)
-        encoded = self.encoder(downsampled)
-        decoded = self.decoder(encoded)
+        encoded = self.encoder_fromconv(downsampled)
+        decoded = self.decoder_fromconv(encoded)
         upsampled = self.upsample(decoded)
-        return upsampled 
+        final = upsampled
+        return final 
 
 # Training function 
 def train(model, dataloader, epochs=20):
@@ -101,7 +120,7 @@ model = Autoencoder(input_dim)
 model.to(device)
 model = model.float()
 criterion = nn.MSELoss()
-optimizer = optim.Adam(model.parameters(), eps=1e-4)
+optimizer = optim.Adam(model.parameters(), eps=1e-7)
 
 if torch.cuda.device_count() > 1:
     print(f'Using {torch.cuda.device_count()} GPUs')
