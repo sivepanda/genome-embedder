@@ -6,20 +6,43 @@ import matplotlib.pyplot as plt
 from torch_model import Autoencoder
 from gencovvec import get_coverage_vectors
 from gencovvec import get_labelled_coverage_vectors
-from genemb import get_encoded_vals_torch
+from genemb import get_encoded_vals_torch, get_encoded_vals_tf
 
-get_coverage_vectors(new_coverage_vectors=True)
+# Ensures coverage vectors exist
+get_coverage_vectors(new_coverage_vectors=False)
 
-options = ['2-dimensional-graph', '3-dimensional-graph-matplot', '3-dimensional-graph-plotly']
-option = options[2] # Select the index of the desired option
+print('\n')
+print('Select your graph option')
+print('[0] 2-Dimensional Graph')
+print('[1] 3-Dimensional MatplotLib Graph')
+print('[2] 3-Dimensional Plotly Graph')
+option = int(input())
+print('\n')
 
-encoded_vals = get_encoded_vals_torch()
+if (option < 0 or option > 2):
+    print('Invalid option.\nSelecting Default: "2-Dimensional Graph".')
+    option = 0
+
+print('\n')
+print('Select your model option')
+print('[0] PyTorch (ONLY SUPPORTS CUDA)')
+print('[1] TensorFlow')
+model_option = int(input())
+print('\n')
+
+if model_option == 1:
+    # Gets encoded values from the PyTorch model
+    encoded_vals = get_encoded_vals_torch()
+else:
+    # Gets encoded values from TensorFlow model if it was selected or if an invalid option was selected
+    if model_option > 1:
+        print('Invalid option.\nSelecting Default: TensorFlow')
+    encoded_vals = get_encoded_vals_tf()
 
 # 2 Dimensional graph
-if option == options[0]:
+if option == 0:
     e_v = []
     for key, value in encoded_vals.items():
-        print(len(value))
         e_v.append( value[0] )
     e_v = np.array( e_v )
     labels = list( encoded_vals.keys() )
@@ -34,7 +57,7 @@ if option == options[0]:
 
 
 # 3 Dimensional plot with Matplotlib
-if option == options[1]:
+if option == 1:
     e_v = []
     for key, value in encoded_vals.items():
         e_v.append( value[0] )
@@ -53,7 +76,7 @@ if option == options[1]:
     plt.show()
 
 # 3 Dimensional plot with Plotly
-if option == options[2]:
+if option == 2:
     import pandas as pd
     import plotly.express as px
     e_v = []

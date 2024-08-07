@@ -14,16 +14,6 @@ option = options[0]
 
 encoded_vals = get_encoded_vals()
 
-# np.set_printoptions(threshold=np.inf)
-# lbc = get_labelled_coverage_vectors()
-# encoder = load_model('./models/encoder.keras')
-# encoded_vals = {}
-# for key, value in lbc.items():
-#     print(key)
-#     encoded_vals[ key ] = encoder.predict( np.array( [value] ) )
-#     print( encoded_vals[ key ] )
-
-
 if option == options[0]:
     e_v = []
     for key, value in encoded_vals.items():

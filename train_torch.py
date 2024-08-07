@@ -10,10 +10,9 @@ from torch.utils.data import DataLoader, TensorDataset
 
 
 
+# Compute options
 device = torch.device("cuda" if torch.cuda.is_available() else cpu)
-
 print(f'You are running {device}')
-
 torch.cuda.memory._record_memory_history()
 
 
@@ -117,11 +116,14 @@ print(input_dim)
 model = Autoencoder(input_dim)
 
 
-model.to(device)
-model = model.float()
+
+# Set loss function and optimizer
 criterion = nn.MSELoss()
 optimizer = optim.Adam(model.parameters(), eps=1e-7)
 
+# Set compute options
+model.to(device)
+model = model.float()
 if torch.cuda.device_count() > 1:
     print(f'Using {torch.cuda.device_count()} GPUs')
     model = nn.DataParallel(model)
@@ -129,8 +131,9 @@ if torch.cuda.device_count() > 1:
 
 train(model, train_loader)
 
-
+# Save trained model
 torch.save(model, os.path.join(os.getcwd(), 'models', 'model.pth'))
 
 
+# Write telemetry for the GPU
 torch.cuda.memory._dump_snapshot("snap.pickle")

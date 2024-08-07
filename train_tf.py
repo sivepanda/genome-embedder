@@ -7,17 +7,14 @@ from tensorflow.keras.models import Model
 from tensorflow.keras.layers import Input, Dense
 
 
-# data = get_coverage_vectors()
 data = get_coverage_vectors(new_coverage_vectors=False)
 data = data.astype(np.float32)
-# data_f16 = data.astype(np.float16)
 
 x_train, x_test = train_test_split(data, test_size=0.2, random_state=50)
 
 
 # Define the size of the encoding
 input_dim = x_train.shape[1]
-# encoding_dim = int( input_dim // 2 )  # Dimension of the latent space
 encoding_dim = 240 # Dimension of the latent space
 print(input_dim)
 

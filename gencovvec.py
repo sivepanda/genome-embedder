@@ -5,6 +5,7 @@ import concurrent.futures
 import threading
 from scipy.sparse import csr_matrix
 
+# Removes the limit for prints in case we want to see the outputs
 np.set_printoptions(threshold=np.inf)
 
 # Return a numpy array of arrays for every file in coverage_vector_path
@@ -44,7 +45,6 @@ def get_labelled_coverage_vectors( coverage_vector_path='covvecs' ):
 def coverage_vectors_from_bed(track_path = 'tracks', coverage_vector_path='covvecs'):
     track_path=os.path.join(os.getcwd(), track_path)
     coverage_vector_path = os.path.join(os.getcwd(), coverage_vector_path)
-    print('trcv', track_path, coverage_vector_path)
     
     # Initialize multithreaded operation and read all files located in track_path
     max_workers = os.cpu_count() if os.cpu_count() < 2 else 2
@@ -88,13 +88,7 @@ def create_coverage_vector( feature='', feature_file='', genome="hg38", base='tr
     feature = pybedtools.example_bedtool(os.path.join(os.getcwd(), base , feature_file))
     overlap = windows.coverage(feature)
     coverage_vec = []
-    print('overlaplen',len(overlap))
-    # for now, we'll omit the final sequences of each chromosome to allow for vectors to retain the same dimensionality
-    # later, strategy could either be appending zeros to fill out the remainder of the window, or it could be adjusting 
-    # window size to work with everything else, assuming it makes sense computationally + no prime lengths
     for f in overlap:
-        if float( f[-1] ) < 0:
-            print( f[-1] )
         try:
             n = float( f[-1] )
             if n <= 1 and n >= 0:
